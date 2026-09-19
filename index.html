@@ -1052,7 +1052,13 @@ footer p{max-width:68em;margin:0 0 10px}
           btn.style.display = 'none';
         })
         .catch(function(){
-          msg.innerHTML = 'Something went wrong sending that. Please email us directly at <a href="mailto:aman.b.cpa@gmail.com">aman.b.cpa@gmail.com</a>.';
+          var f = new FormData(form), lines = [];
+          [['name','Name'],['email','Email'],['phone','Phone'],['service','Service'],['detail','Specifically'],['staff','Staff'],['message','Message']].forEach(function(pair){
+            var v = f.get(pair[0]);
+            if(v) lines.push(pair[1] + ': ' + v);
+          });
+          var link = 'mailto:aman.b.cpa@gmail.com?subject=' + encodeURIComponent('Enquiry from bamrahandco.com') + '&body=' + encodeURIComponent(lines.join('\n'));
+          msg.innerHTML = 'That did not send. <a href="' + link + '">Click here to send it by email instead</a> — your answers are already filled in.';
           msg.classList.add('show');
           btn.disabled = false; btn.textContent = 'Send and Book a Call';
         });
