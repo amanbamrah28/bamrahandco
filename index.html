@@ -295,6 +295,20 @@ footer p{max-width:68em;margin:0 0 10px}
 .fmsg{grid-column:1/-1;font-size:15.5px;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:12px;padding:16px 18px;margin:0;display:none}
 .fmsg.show{display:block}
 
+/* junk notice under submit */
+.junknote{margin:2px 0 0;max-width:none;background:#f2681c;color:#fff;border-radius:12px;padding:14px 18px;font-size:15.5px;line-height:1.45}
+.junknote strong{color:#fff}
+
+/* form success */
+.fdone{margin-top:34px;background:#fff;color:#0a1222;border-radius:18px;padding:34px 32px;border-left:8px solid #f2681c;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.fdone:focus{outline:none}
+.fdone h3{font-family:var(--fd);font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:700;line-height:1.15;margin:0 0 16px;color:#0a1222}
+.fdone .big{font-size:clamp(1.15rem,2.3vw,1.4rem);font-weight:700;line-height:1.45;margin:0 0 14px;color:#0a1222;max-width:none}
+.fdone .big u{text-decoration-color:#f2681c;text-decoration-thickness:3px;text-underline-offset:4px}
+.fdone p{font-size:16px;color:#34405a;margin:0;max-width:none}
+.fdone p strong{color:#0a1222}
+.cform[hidden],.fdone[hidden]{display:none}
+
 /* contact phones + maple */
 .contact .phones{display:flex;flex-wrap:wrap;gap:6px 26px}
 .maple{font-size:14.5px;font-weight:600;color:var(--ink-2);margin:10px 0 0}
@@ -1033,7 +1047,13 @@ footer p{max-width:68em;margin:0 0 10px}
         </div>
         <p class="fmsg full" id="fmsg"></p>
         <button class="btn btn-lg full" type="submit" id="fsubmit">Request My 5-Minute Call</button>
+        <p class="junknote full"><strong>Please check your junk or spam folder</strong> for our reply, and mark it "Not junk" so you don't miss us.</p>
       </form>
+      <div class="fdone" id="fdone" hidden tabindex="-1" role="status" aria-live="polite">
+        <h3>Thank you — we've received your enquiry.</h3>
+        <p class="big">Please check your inbox <u>and your junk or spam folder</u> for our confirmation email.</p>
+        <p>If it's in junk or spam, mark it <strong>"Not junk"</strong> and add <strong>info@bamrahandco.com</strong> to your contacts so our replies reach you.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1076,9 +1096,11 @@ footer p{max-width:68em;margin:0 0 10px}
         .then(function(res){
           if(!res.ok) throw new Error('bad status');
           form.reset();
-          msg.textContent = 'Thank you — we have received your enquiry and will be in touch.';
-          msg.classList.add('show');
-          btn.style.display = 'none';
+          form.hidden = true;
+          var done = document.getElementById('fdone');
+          done.hidden = false;
+          done.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'center'});
+          done.focus({preventScroll: true});
         })
         .catch(function(){
           var f = new FormData(form), lines = [];
